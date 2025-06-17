@@ -76,4 +76,7 @@ function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+// Torna a função de navegação global para os botões inline da home
+window.navigate = navigate;
+
 initializeApp();
