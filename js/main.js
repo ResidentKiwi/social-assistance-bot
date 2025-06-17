@@ -1,5 +1,5 @@
 import { loadAuthPage, loadRegisterForm } from "./auth.js";
-import { supabase } from "../supabaseClient.js";
+import { supabase } from "./supabaseClient.js"; // certifique-se de que esse arquivo exista em /js/
 
 let currentUser = null, isAdmin = false;
 
