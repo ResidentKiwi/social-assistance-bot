@@ -5,7 +5,7 @@ function loadPage(page) {
       <form id="authForm">
         <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="email" required></div>
         <div class="mb-3"><label>Nome</label><input type="text" class="form-control" id="name"></div>
-        <div class="mb-3"><label>Sou desenvolvedor (ignorar verificação)</label><input type="checkbox" id="isDev"></div>
+        <div class="mb-3"><label>Sou desenvolvedor</label><input type="checkbox" id="isDev"></div>
         <button type="submit" class="btn btn-primary">Continuar</button>
       </form>
     `;
@@ -19,13 +19,14 @@ async function authSubmit(e) {
   const name = document.getElementById('name').value;
   const dev = document.getElementById('isDev').checked;
 
-  const loginRes = await fetch('https://<SEU-RENDER-APP>.onrender.com/auth/login', {
+  const loginRes = await fetch('https://social-assistance-backend.onrender.com/auth/login', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({email, name})
-  }).then(res => res.json());
+  });
+  const user = await loginRes.json();
 
   if (dev) {
-    currentUser = { email, name };
+    currentUser = user;
     isAdmin = true;
     showAdminMenu(true);
     updateLoginButton();
@@ -33,7 +34,7 @@ async function authSubmit(e) {
     return;
   }
 
-  await fetch('https://<SEU-RENDER-APP>.onrender.com/auth/send-code', {
+  await fetch('https://social-assistance-backend.onrender.com/auth/send-code', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({email, name})
   });
@@ -50,13 +51,15 @@ async function authSubmit(e) {
   document.getElementById('verifyForm').onsubmit = async (e) => {
     e.preventDefault();
     const code = document.getElementById('code').value;
-    const res = await fetch(`https://<SEU-RENDER-APP>.onrender.com/auth/verify-code?email=${email}&code=${code}`, {method: 'POST'});
+    const res = await fetch(`https://social-assistance-backend.onrender.com/auth/verify-code?email=${email}&code=${code}`, {method: 'POST'});
     if (res.ok) {
-      currentUser = { email, name };
+      currentUser = user;
+      isAdmin = user.is_admin;
+      showAdminMenu(isAdmin);
       updateLoginButton();
       loadPage('home');
     } else {
       alert('Código inválido ou expirado');
     }
   };
-      }
+}
