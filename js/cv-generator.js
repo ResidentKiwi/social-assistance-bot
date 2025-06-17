@@ -23,7 +23,7 @@ document.getElementById('cvForm').onsubmit = async (e) => {
   const email = document.getElementById('email').value;
   const experiencia = document.getElementById('experiencia').value;
 
-  const res = await fetch('https://<SEU-RENDER-APP>.onrender.com/cv/generate', {
+  const res = await fetch('https://social-assistance-backend.onrender.com/cv/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name: nome, email, experience: experiencia })
