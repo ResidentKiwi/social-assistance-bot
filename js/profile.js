@@ -1,17 +1,61 @@
-function loadProfile(user) {
-  document.getElementById('main-content').innerHTML = `
+import { supabase } from "../supabaseClient.js";
+
+export async function loadProfile() {
+  const { data: session } = await supabase.auth.getSession();
+  const user = session.session?.user;
+  if (!user) {
+    document.getElementById("main-content").innerHTML = `<p class="text-warning">Você precisa estar logado para acessar o perfil.</p>`;
+    return;
+  }
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    document.getElementById("main-content").innerHTML = `<p class="text-danger">Erro ao carregar perfil.</p>`;
+    return;
+  }
+
+  document.getElementById("main-content").innerHTML = `
     <h2><i class="fas fa-user"></i> Perfil</h2>
     <form id="profileForm">
-      <div class="mb-3"><label class="form-label">Nome</label><input class="form-control" id="nome" value="${user?.name || ''}"></div>
-      <div class="mb-3"><label class="form-label">Email</label><input class="form-control" id="email" value="${user?.email || ''}" disabled></div>
-      <div class="mb-3"><label class="form-label">Descrição</label><textarea class="form-control" id="desc" placeholder="Sobre você..."></textarea></div>
-      <div class="mb-3"><label class="form-label">Foto</label><input class="form-control" id="foto" placeholder="URL da foto"></div>
-      <button type="submit" class="btn btn-info">Salvar</button>
+      <div class="mb-3">
+        <label>Nome completo</label>
+        <input type="text" class="form-control" id="name" value="${profile.name || ''}" />
+      </div>
+      <div class="mb-3">
+        <label>Nome de usuário</label>
+        <input type="text" class="form-control" value="${profile.username}" disabled />
+      </div>
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="email" class="form-control" value="${user.email}" disabled />
+      </div>
+      <div class="mb-3">
+        <label>Descrição (opcional)</label>
+        <textarea class="form-control" id="desc" placeholder="Sobre você...">${profile.description || ""}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Salvar alterações</button>
     </form>
   `;
 
-  document.getElementById('profileForm').onsubmit = e => {
+  document.getElementById("profileForm").onsubmit = async (e) => {
     e.preventDefault();
-    alert('Perfil salvo localmente. Integração futura com Supabase.');
+    const name = document.getElementById("name").value;
+    const desc = document.getElementById("desc").value;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ name, description: desc })
+      .eq("id", user.id);
+
+    if (error) {
+      alert("Erro ao atualizar perfil.");
+    } else {
+      alert("Perfil atualizado com sucesso!");
+    }
   };
 }
