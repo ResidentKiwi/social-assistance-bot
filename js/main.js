@@ -1,7 +1,8 @@
 import { loadAuthPage, loadRegisterForm } from "./auth.js";
 import { supabase } from "./supabaseClient.js";
 
-let currentUser = null, isAdmin = false;
+let currentUser = null;
+let isAdmin = false;
 
 async function initializeApp() {
   const { data } = await supabase.auth.getSession();
@@ -21,12 +22,8 @@ async function initializeApp() {
     document.getElementById("btn-login").onclick = handleLogout;
   }
 
-  // Inicializar botões se estiver deslogado
   document.getElementById("btn-login").onclick = () => loadAuthPage(onLoginSuccess);
   document.getElementById("btn-register").onclick = () => loadRegisterForm(onLoginSuccess);
-
-  // Carregar a página inicial
-  navigate("home");
 }
 
 function onLoginSuccess(user, admin) {
@@ -51,8 +48,11 @@ function handleLogout() {
   });
 }
 
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export function navigate(page) {
-  // Fecha o menu retrátil, se estiver aberto
   const offcanvasEl = document.getElementById("offcanvasMenu");
   const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
   if (offcanvas) offcanvas.hide();
@@ -67,16 +67,16 @@ export function navigate(page) {
         document.getElementById("main-content").innerHTML = `<p class="text-warning">Página "${page}" não encontrada.</p>`;
       }
     })
-    .catch(() => {
-      document.getElementById("main-content").innerHTML = `<p class="text-danger">Erro ao carregar página "${page}".</p>`;
+    .catch((err) => {
+      console.error(err);
+      document.getElementById("main-content").innerHTML = `<p class="text-danger">Erro ao carregar "${page}".</p>`;
     });
 }
 
-function capitalize(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-// Torna a função de navegação global para os botões inline da home
+// Deixa a função global para botões HTML
 window.navigate = navigate;
 
-initializeApp();
+// Inicializa o app e só depois navega para "home"
+initializeApp().then(() => {
+  navigate("home");
+});
