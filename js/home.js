@@ -1,22 +1,24 @@
 export default function () {
   document.getElementById("main-content").innerHTML = `
-    <div class="text-center my-5">
-      <h1 class="mb-4"><i class="fas fa-hands-helping text-success"></i> Portal de Apoio Social</h1>
-      <p class="lead">Ferramentas gratuitas para impulsionar sua jornada:</p>
+    <section class="text-center my-5">
+      <h1 class="mb-4 text-light">
+        <i class="fas fa-hands-helping text-primary"></i> Portal de Apoio Social
+      </h1>
+      <p class="lead text-secondary">Ferramentas gratuitas para impulsionar sua jornada:</p>
       <div class="d-flex flex-wrap justify-content-center mt-4 gap-3">
-        <button class="btn btn-outline-light" onclick="navigate('cv-generator')">
-          <i class="fas fa-file-alt"></i> Currículo
+        <button class="btn btn-outline-light px-4 py-2" onclick="navigate('cv-generator')">
+          <i class="fas fa-file-alt me-2"></i> Currículo
         </button>
-        <button class="btn btn-outline-light" onclick="navigate('benefit-checker')">
-          <i class="fas fa-hand-holding-heart"></i> Benefícios
+        <button class="btn btn-outline-light px-4 py-2" onclick="navigate('benefit-checker')">
+          <i class="fas fa-hand-holding-heart me-2"></i> Benefícios
         </button>
-        <button class="btn btn-outline-light" onclick="navigate('vestibular-guide')">
-          <i class="fas fa-graduation-cap"></i> Vestibular
+        <button class="btn btn-outline-light px-4 py-2" onclick="navigate('vestibular-guide')">
+          <i class="fas fa-graduation-cap me-2"></i> Vestibular
         </button>
-        <button class="btn btn-outline-light" onclick="navigate('profile')">
-          <i class="fas fa-user"></i> Perfil
+        <button class="btn btn-outline-light px-4 py-2" onclick="navigate('profile')">
+          <i class="fas fa-user me-2"></i> Perfil
         </button>
       </div>
-    </div>
+    </section>
   `;
 }
