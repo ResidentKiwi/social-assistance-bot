@@ -61,8 +61,6 @@ export function navigate(page) {
     .then((mod) => {
       if (mod.default) {
         mod.default();
-      } else if (typeof window[`load${capitalize(page)}`] === "function") {
-        window[`load${capitalize(page)}`]();
       } else {
         document.getElementById("main-content").innerHTML = `<p class="text-warning">Página "${page}" não encontrada.</p>`;
       }
@@ -73,10 +71,8 @@ export function navigate(page) {
     });
 }
 
-// Deixa a função global para botões HTML
 window.navigate = navigate;
 
-// Inicializa o app e só depois navega para "home"
 initializeApp().then(() => {
   navigate("home");
 });
