@@ -4,7 +4,7 @@ export default function () {
       <h1 class="mb-4 text-light">
         <i class="fas fa-hands-helping text-primary"></i> Portal de Apoio Social
       </h1>
-      <p class="lead text-secondary">Apoio gratuito para quem busca crescer, conquistar e evoluir.</p>
+      <p class="lead text-secondary">Ferramentas gratuitas para te orientar na educação, no trabalho e no acesso a direitos.</p>
       <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
         <button class="btn btn-outline-light px-4 py-2" onclick="navigate('cv-generator')">
           <i class="fas fa-file-alt me-2"></i> Currículo
