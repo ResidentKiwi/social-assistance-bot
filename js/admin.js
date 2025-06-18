@@ -1,4 +1,4 @@
-async function loadAdmin() {
+export default async function () {
   const res = await fetch('https://social-assistance-backend.onrender.com/admin/users', {
     headers: { 'X-User-Email': currentUser.email }
   });
@@ -42,11 +42,10 @@ async function loadAdmin() {
   });
 
   html += '</tbody></table>';
-
   document.getElementById('main-content').innerHTML = html;
 }
 
-async function toggleAdmin(email, promote) {
+window.toggleAdmin = async function (email, promote) {
   const endpoint = promote ? 'promote' : 'demote';
   const res = await fetch(`https://social-assistance-backend.onrender.com/admin/users/${endpoint}?email=${encodeURIComponent(email)}`, {
     method: 'POST',
@@ -54,8 +53,8 @@ async function toggleAdmin(email, promote) {
   });
 
   if (res.ok) {
-    loadAdmin(); // Recarrega a tabela
+    navigate('admin'); // recarrega a página
   } else {
     alert('Erro ao atualizar permissões.');
   }
-}
+};
