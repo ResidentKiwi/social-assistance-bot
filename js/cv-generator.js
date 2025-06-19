@@ -1,52 +1,52 @@
 export default function () {
   document.getElementById('main-content').innerHTML = `
-    <h2 class="mb-4"><i class="fas fa-file-alt"></i> Gerador de Currículo</h2>
+    <h2 class="mb-4"><i class="fas fa-file-alt"></i> Currículo Profissional</h2>
     <form id="cvForm" class="bg-dark p-4 rounded border border-secondary">
-      <h5 class="text-info">📌 Dados Pessoais</h5>
-      <div class="mb-3"><input type="text" class="form-control" id="nome" placeholder="Ex: João da Silva" required></div>
-      <div class="mb-3"><input type="email" class="form-control" id="email" placeholder="Ex: joao@email.com" required></div>
-      <div class="mb-3"><input type="text" class="form-control" id="telefone" placeholder="Ex: (11) 91234-5678" required></div>
+      <label class="form-label mt-2">Nome*</label>
+      <input type="text" class="form-control mb-3" id="nome" placeholder="João da Silva" required>
 
-      <h5 class="text-info mt-4">🎯 Objetivo Profissional</h5>
-      <div class="mb-3">
-        <textarea class="form-control" id="objetivo" rows="3" placeholder="Ex: Ingressar na área administrativa com foco em crescimento e aprendizado." required></textarea>
-      </div>
+      <label class="form-label">Email*</label>
+      <input type="email" class="form-control mb-3" id="email" placeholder="exemplo@email.com" required>
 
-      <h5 class="text-info mt-4">🎓 Formação Acadêmica</h5>
-      <div class="mb-3">
-        <textarea class="form-control" id="formacao" rows="3" placeholder="Ex: Ensino Médio completo – Escola Estadual ABC – 2022" required></textarea>
-      </div>
+      <label class="form-label">Telefone*</label>
+      <input type="text" class="form-control mb-3" id="telefone" placeholder="(99) 99999-9999" required>
 
-      <h5 class="text-info mt-4">💼 Experiência Profissional (opcional)</h5>
-      <div class="mb-3">
-        <textarea class="form-control" id="experiencia" rows="3" placeholder="Ex: Auxiliar administrativo – Empresa XYZ – jan/2021 a dez/2022"></textarea>
-      </div>
+      <label class="form-label">Escolaridade*</label>
+      <select class="form-select mb-3" id="formacao" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option>Ensino Fundamental Incompleto</option>
+        <option>Ensino Fundamental Completo</option>
+        <option>Ensino Médio Incompleto</option>
+        <option>Ensino Médio Completo</option>
+        <option>Superior Incompleto</option>
+        <option>Superior Completo</option>
+        <option>Pós-graduação / Especialização</option>
+      </select>
 
-      <h5 class="text-info mt-4">📚 Cursos e Qualificações (opcional)</h5>
-      <div class="mb-3">
-        <textarea class="form-control" id="cursos" rows="3" placeholder="Ex: Curso de Excel Básico – SENAI – 2023"></textarea>
-      </div>
+      <label class="form-label">Objetivo*</label>
+      <input type="text" class="form-control mb-3" id="objetivo" placeholder="Ex: Atuar na área administrativa" required>
 
-      <h5 class="text-info mt-4">➕ Informações Complementares (opcional)</h5>
-      <div class="mb-3">
-        <textarea class="form-control" id="extras" rows="3" placeholder="Ex: Trabalho voluntário, habilidades em equipe, disponibilidade para viagens..."></textarea>
-      </div>
+      <label class="form-label">Experiência (opcional)</label>
+      <textarea class="form-control mb-3" id="experiencia" rows="2" placeholder="Empresa, cargo, período..."></textarea>
 
-      <button type="submit" class="btn btn-primary w-100 mt-3">
-        <i class="fas fa-download me-2"></i> Gerar Currículo em PDF
-      </button>
+      <label class="form-label">Cursos (opcional)</label>
+      <textarea class="form-control mb-3" id="cursos" rows="2" placeholder="Curso, instituição, ano..."></textarea>
+
+      <label class="form-label">Informações adicionais (opcional)</label>
+      <textarea class="form-control mb-3" id="extras" rows="2" placeholder="Idiomas, voluntariado, disponibilidade..."></textarea>
+
+      <button type="submit" class="btn btn-primary w-100 mt-2"><i class="fas fa-file-download me-2"></i> Baixar Currículo em PDF</button>
     </form>
   `;
 
   document.getElementById('cvForm').onsubmit = async (e) => {
     e.preventDefault();
-
     const dados = {
       nome: document.getElementById('nome').value.trim(),
       email: document.getElementById('email').value.trim(),
       telefone: document.getElementById('telefone').value.trim(),
-      objetivo: document.getElementById('objetivo').value.trim() || "Busco minha primeira oportunidade no mercado com foco em aprendizado e desenvolvimento.",
-      formacao: document.getElementById('formacao').value.trim(),
+      objetivo: document.getElementById('objetivo').value.trim(),
+      formacao: document.getElementById('formacao').value,
       experiencia: document.getElementById('experiencia').value.trim(),
       cursos: document.getElementById('cursos').value.trim(),
       extras: document.getElementById('extras').value.trim(),
