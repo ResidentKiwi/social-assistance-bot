@@ -20,9 +20,11 @@ async function initializeApp() {
     document.getElementById("admin-menu").classList.toggle("d-none", !isAdmin);
     document.getElementById("btn-login").textContent = "Logout";
     document.getElementById("btn-login").onclick = handleLogout;
+  } else {
+    document.getElementById("btn-login").textContent = "Login";
+    document.getElementById("btn-login").onclick = () => loadAuthPage(onLoginSuccess);
   }
 
-  document.getElementById("btn-login").onclick = () => loadAuthPage(onLoginSuccess);
   document.getElementById("btn-register").onclick = () => loadRegisterForm(onLoginSuccess);
 }
 
@@ -53,6 +55,7 @@ function capitalize(s) {
 }
 
 export function navigate(page) {
+  // Fecha o menu lateral ao navegar
   const offcanvasEl = document.getElementById("offcanvasMenu");
   const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
   if (offcanvas) offcanvas.hide();
@@ -61,6 +64,8 @@ export function navigate(page) {
     .then((mod) => {
       if (mod.default) {
         mod.default();
+      } else if (typeof window[`load${capitalize(page)}`] === "function") {
+        window[`load${capitalize(page)}`]();
       } else {
         document.getElementById("main-content").innerHTML = `<p class="text-warning">Página "${page}" não encontrada.</p>`;
       }
@@ -71,8 +76,10 @@ export function navigate(page) {
     });
 }
 
+// Disponibiliza navegação para HTML
 window.navigate = navigate;
 
+// Inicia app e mostra home
 initializeApp().then(() => {
   navigate("home");
 });
