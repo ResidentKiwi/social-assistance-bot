@@ -7,7 +7,7 @@ body {
 a, .nav-link {
   color: #e0e0e0;
   text-decoration: none;
-  transition: color 0.3s, background-color 0.3s;
+  transition: 0.3s ease;
 }
 
 a:hover, .nav-link:hover {
@@ -30,43 +30,37 @@ main {
   min-height: 85vh;
 }
 
-.btn, .form-control {
+.btn {
   border-radius: 8px;
-  transition: background-color 0.3s, color 0.3s;
+  transition: all 0.3s ease;
 }
 
-.main-btn-outline {
-  border: 1px solid #777;
-  color: #e0e0e0;
-  background-color: transparent;
-}
-
-.main-btn-outline:hover {
-  background-color: #2c2c2c;
-  color: #fff;
-}
-
-.btn-primary, .btn-success {
+.btn-purple {
   background-color: #6c63ff;
   border: none;
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: #857cff;
   color: #fff;
 }
 
-.btn-primary:hover, .btn-success:hover {
-  background-color: #857cff;
+.btn-outline-light {
+  border: 1px solid #666;
+  color: #e0e0e0;
 }
 
-.card {
-  background-color: #1d1d1d;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 1rem;
+.btn-outline-light:hover {
+  background-color: #333;
+  color: white;
 }
 
 .form-control {
   background-color: #1b1b1b;
   border: 1px solid #333;
   color: #e0e0e0;
+  border-radius: 8px;
 }
 
 .form-control::placeholder {
@@ -75,9 +69,12 @@ main {
 
 .form-control:focus {
   background-color: #1c1c1c;
-  color: white;
   border-color: #6c63ff;
   box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.4);
+}
+
+.text-purple {
+  color: #6c63ff !important;
 }
 
 h1, h2, h5 {
@@ -86,12 +83,4 @@ h1, h2, h5 {
 
 hr.border-light {
   border-top: 1px solid #444;
-}
-
-textarea.form-control {
-  resize: vertical;
-}
-
-.text-purple {
-  color: #6c63ff !important;
 }
