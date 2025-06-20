@@ -55,10 +55,12 @@ function capitalize(s) {
 }
 
 export function navigate(page) {
-  // Fecha o menu lateral ao navegar
+  // Garante que o offcanvas fecha corretamente
   const offcanvasEl = document.getElementById("offcanvasMenu");
-  const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-  if (offcanvas) offcanvas.hide();
+  if (bootstrap && offcanvasEl) {
+    const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl) || new bootstrap.Offcanvas(offcanvasEl);
+    offcanvas.hide();
+  }
 
   import(`./${page}.js`)
     .then((mod) => {
@@ -76,10 +78,8 @@ export function navigate(page) {
     });
 }
 
-// Disponibiliza navegação para HTML
 window.navigate = navigate;
 
-// Inicia app e mostra home
 initializeApp().then(() => {
   navigate("home");
 });
