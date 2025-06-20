@@ -4,25 +4,24 @@ body {
   font-family: 'Segoe UI', sans-serif;
 }
 
+.navbar, .offcanvas {
+  background-color: #181818;
+  border-bottom: 1px solid #292929;
+}
+
 a, .nav-link {
-  color: #e0e0e0;
+  color: #ccc;
   text-decoration: none;
   transition: 0.3s ease;
 }
-
-a:hover, .nav-link:hover {
-  color: #ffffff;
-  background-color: #2a2a2a;
-}
-
-.navbar, .offcanvas {
-  background-color: #171717;
-  border-bottom: 1px solid #2c2c2c;
+.nav-link:hover, a:hover {
+  color: #fff;
+  background-color: #242424;
 }
 
 .offcanvas {
-  width: 260px;
-  border-right: 1px solid #2c2c2c;
+  width: 250px;
+  border-right: 1px solid #292929;
 }
 
 main {
@@ -30,55 +29,61 @@ main {
   min-height: 85vh;
 }
 
-.btn {
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.btn-purple {
-  background-color: #6c63ff;
-  border: none;
-  color: white;
-}
-
-.btn-purple:hover {
-  background-color: #857cff;
-  color: #fff;
-}
-
-.btn-outline-light {
-  border: 1px solid #666;
-  color: #e0e0e0;
-}
-
-.btn-outline-light:hover {
-  background-color: #333;
-  color: white;
-}
-
-.form-control {
-  background-color: #1b1b1b;
-  border: 1px solid #333;
-  color: #e0e0e0;
-  border-radius: 8px;
-}
-
-.form-control::placeholder {
-  color: #888;
-}
-
-.form-control:focus {
-  background-color: #1c1c1c;
-  border-color: #6c63ff;
-  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.4);
+h1, h2, h5 {
+  color: #f5f5f5;
 }
 
 .text-purple {
   color: #6c63ff !important;
 }
 
-h1, h2, h5 {
-  color: #f5f5f5;
+/* Botões principais */
+.main-btn {
+  background-color: #6c63ff;
+  border: none;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-size: 1rem;
+  transition: 0.3s;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+}
+.main-btn:hover {
+  background-color: #7a71ff;
+  box-shadow: 0 0 12px rgba(108, 99, 255, 0.6);
+}
+
+/* Formulários */
+.form-control {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  color: #e0e0e0;
+  border-radius: 8px;
+}
+.form-control::placeholder {
+  color: #888;
+}
+.form-control:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.4);
+}
+
+/* Botões de login */
+.btn-outline-light {
+  border: 1px solid #666;
+  color: #e0e0e0;
+}
+.btn-outline-light:hover {
+  background-color: #333;
+  color: white;
+}
+
+.btn-primary, .btn-success {
+  background-color: #6c63ff;
+  border: none;
+}
+.btn-primary:hover, .btn-success:hover {
+  background-color: #7a71ff;
 }
 
 hr.border-light {
