@@ -2,15 +2,18 @@ import { supabase } from "./supabaseClient.js";
 
 export function loadAuthPage(onSuccess) {
   document.getElementById("main-content").innerHTML = `
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <h2 class="text-center mb-4">Entrar</h2>
-        <form id="loginForm">
-          <input type="email" id="loginEmail" class="form-control mb-3" placeholder="Email" required />
-          <input type="password" id="loginPassword" class="form-control mb-3" placeholder="Senha" required />
-          <button type="submit" class="btn btn-primary w-100">Entrar</button>
-        </form>
-      </div>
+    <div class="max-w-md mx-auto bg-gray-900 text-white p-8 rounded-lg shadow-lg mt-10">
+      <h2 class="text-2xl font-semibold text-center mb-6">Entrar na sua conta</h2>
+      <form id="loginForm" class="space-y-4">
+        <input type="email" id="loginEmail" placeholder="Email" required
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+        <input type="password" id="loginPassword" placeholder="Senha" required
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+        <button type="submit"
+          class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">
+          Entrar
+        </button>
+      </form>
     </div>
   `;
 
@@ -30,17 +33,22 @@ export function loadAuthPage(onSuccess) {
 
 export function loadRegisterForm(onSuccess) {
   document.getElementById("main-content").innerHTML = `
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <h2 class="text-center mb-4">Criar Conta</h2>
-        <form id="signupForm">
-          <input type="text" id="signupName" class="form-control mb-3" placeholder="Nome completo" required />
-          <input type="text" id="signupUsername" class="form-control mb-3" placeholder="Nome de usuário" required />
-          <input type="email" id="signupEmail" class="form-control mb-3" placeholder="Email" required />
-          <input type="password" id="signupPassword" class="form-control mb-3" placeholder="Senha segura (mín. 8 caracteres)" required />
-          <button type="submit" class="btn btn-success w-100">Registrar</button>
-        </form>
-      </div>
+    <div class="max-w-xl mx-auto bg-gray-900 text-white p-8 rounded-lg shadow-lg mt-10">
+      <h2 class="text-2xl font-semibold text-center mb-6">Criar nova conta</h2>
+      <form id="signupForm" class="space-y-4">
+        <input type="text" id="signupName" placeholder="Nome completo" required
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+        <input type="text" id="signupUsername" placeholder="Nome de usuário" required
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+        <input type="email" id="signupEmail" placeholder="Email" required
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+        <input type="password" id="signupPassword" placeholder="Senha (mín. 8 caracteres)" required
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+        <button type="submit"
+          class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">
+          Registrar
+        </button>
+      </form>
     </div>
   `;
 
@@ -68,14 +76,18 @@ export function loadRegisterForm(onSuccess) {
     }
 
     document.getElementById("main-content").innerHTML = `
-      <h2 class="mb-3 text-center">Verifique seu email</h2>
-      <p class="text-center">Enviamos um código de verificação para <strong>${email}</strong>.</p>
-      <form id="verifyForm" class="row justify-content-center mt-4">
-        <div class="col-md-6">
-          <input type="text" id="code" maxlength="6" class="form-control mb-3" placeholder="Código de verificação" required />
-          <button class="btn btn-primary w-100">Verificar e Criar Conta</button>
-        </div>
-      </form>
+      <div class="max-w-md mx-auto bg-gray-900 text-white p-8 rounded-lg shadow-lg mt-10">
+        <h2 class="text-xl font-semibold text-center mb-4">Verifique seu e-mail</h2>
+        <p class="text-center mb-6">Um código de verificação foi enviado para <strong>${email}</strong>.</p>
+        <form id="verifyForm" class="space-y-4">
+          <input type="text" id="code" maxlength="6" placeholder="Código de verificação" required
+            class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+          <button
+            class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">
+            Verificar e Criar Conta
+          </button>
+        </form>
+      </div>
     `;
 
     document.getElementById("verifyForm").onsubmit = async (e) => {
