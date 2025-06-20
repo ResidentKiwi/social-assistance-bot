@@ -1,116 +1,79 @@
 import { supabase } from "./supabaseClient.js";
 
-export function loadAuthPage(onSuccess) {
-  document.getElementById("main-content").innerHTML = `
-    <div class="max-w-md mx-auto bg-gray-900 text-white p-8 rounded-lg shadow-lg mt-10">
-      <h2 class="text-2xl font-semibold text-center mb-6">Entrar na sua conta</h2>
-      <form id="loginForm" class="space-y-4">
-        <input type="email" id="loginEmail" placeholder="Email" required
-          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
-        <input type="password" id="loginPassword" placeholder="Senha" required
-          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
-        <button type="submit"
-          class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">
-          Entrar
-        </button>
-      </form>
-      <p class="mt-4 text-center text-gray-400">
-        Não tem uma conta? 
-        <a href="#" class="text-violet-400 hover:underline" onclick="navigate('register')">Registre-se</a>
-      </p>
-    </div>
-  `;
+export default async function () {
+  const { data: session } = await supabase.auth.getSession();
+  const user = session.session?.user;
+  if (!user) {
+    document.getElementById("main-content").innerHTML = `<p class="text-yellow-500">Você precisa estar logado para acessar o perfil.</p>`;
+    return;
+  }
 
-  document.getElementById("loginForm").onsubmit = async (e) => {
-    e.preventDefault();
-    const email = e.target.loginEmail.value;
-    const password = e.target.loginPassword.value;
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return alert("Erro: " + error.message);
+  if (error) {
+    document.getElementById("main-content").innerHTML = `<p class="text-red-500">Erro ao carregar perfil.</p>`;
+    return;
+  }
 
-    const { user } = data;
-    const { data: profile } = await supabase.from("profiles").select("is_admin").eq("id", user.id).single();
-    onSuccess(user, profile?.is_admin);
-  };
-}
+  const avatar = profile.avatar_url 
+    ? `<img src="${profile.avatar_url}" alt="Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 border border-gray-700 object-cover">`
+    : `<div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center text-white">?</div>`;
 
-export function loadRegisterForm(onSuccess) {
   document.getElementById("main-content").innerHTML = `
     <div class="max-w-xl mx-auto bg-gray-900 text-white p-8 rounded-lg shadow-lg mt-10">
-      <h2 class="text-2xl font-semibold text-center mb-6">Criar nova conta</h2>
-      <form id="signupForm" class="space-y-4">
-        <input type="text" id="signupName" placeholder="Nome completo" required
-          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
-        <input type="text" id="signupUsername" placeholder="Nome de usuário" required
-          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
-        <input type="email" id="signupEmail" placeholder="Email" required
-          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
-        <input type="password" id="signupPassword" placeholder="Senha (mín. 8 caracteres)" required
-          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
+      <h2 class="text-2xl font-semibold text-center mb-6">Perfil</h2>
+      ${avatar}
+      <form id="profileForm" class="space-y-4">
+        <input type="text" id="name" placeholder="Nome completo" value="${profile.name || ''}"
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400" />
+        <input type="file" id="avatar" accept="image/*"
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 text-gray-300 file:bg-violet-600 file:text-white file:rounded file:px-4 file:py-2" />
+        <textarea id="desc" placeholder="Sobre você (opcional)"
+          class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400">${profile.description || ""}</textarea>
         <button type="submit"
-          class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">
-          Registrar
-        </button>
+          class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">Salvar alterações</button>
       </form>
-      <p class="mt-4 text-center text-gray-400">
-        Já tem conta? 
-        <a href="#" class="text-violet-400 hover:underline" onclick="navigate('login')">Entre aqui</a>
-      </p>
     </div>
   `;
 
-  document.getElementById("signupForm").onsubmit = async (e) => {
+  document.getElementById("profileForm").onsubmit = async (e) => {
     e.preventDefault();
-    const name = e.target.signupName.value;
-    const username = e.target.signupUsername.value;
-    const email = e.target.signupEmail.value;
-    const password = e.target.signupPassword.value;
+    const name = document.getElementById("name").value;
+    const desc = document.getElementById("desc").value;
+    const file = document.getElementById("avatar").files[0];
+    let avatar_url = profile.avatar_url;
 
-    if (password.length < 8) return alert("A senha deve ter no mínimo 8 caracteres.");
+    if (file) {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/avatar.${fileExt}`;
 
-    const res = await fetch("https://social-assistance-backend.onrender.com/auth/send-code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, username, email, password })
-    });
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      return alert("Erro: " + (err.detail || "Não foi possível iniciar o registro."));
+      if (!uploadError) {
+        const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+        avatar_url = data.publicUrl;
+      } else {
+        alert("Erro ao enviar imagem.");
+        return;
+      }
     }
 
-    document.getElementById("main-content").innerHTML = `
-      <div class="max-w-md mx-auto bg-gray-900 text-white p-8 rounded-lg shadow-lg mt-10">
-        <h2 class="text-xl font-semibold text-center mb-4">Verifique seu e‑mail</h2>
-        <p class="text-center mb-6">Enviamos um código para <strong>${email}</strong>.</p>
-        <form id="verifyForm" class="space-y-4">
-          <input type="text" id="code" maxlength="6" placeholder="Código de verificação" required
-            class="w-full p-3 rounded bg-gray-800 border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600" />
-          <button class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded transition-all duration-300">
-            Verificar e Criar Conta
-          </button>
-        </form>
-      </div>
-    `;
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({ name, description: desc, avatar_url })
+      .eq("id", user.id);
 
-    document.getElementById("verifyForm").onsubmit = async (e2) => {
-      e2.preventDefault();
-      const code = e2.target.code.value;
-
-      const verifyRes = await fetch(`https://social-assistance-backend.onrender.com/auth/verify-code?code=${code}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, username, email, password })
-      });
-
-      if (verifyRes.ok) {
-        alert("Conta criada com sucesso! Faça login agora.");
-        loadAuthPage(onSuccess);
-      } else {
-        const err = await verifyRes.json().catch(() => ({}));
-        alert("Erro: " + (err.detail || "Falha ao verificar código"));
-      }
-    };
+    if (updateError) {
+      alert("Erro ao atualizar perfil.");
+    } else {
+      alert("Perfil atualizado!");
+      location.reload();
+    }
   };
 }
