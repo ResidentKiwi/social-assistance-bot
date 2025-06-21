@@ -4,6 +4,7 @@ import { supabase } from "./supabaseClient.js";
 let currentUser = null;
 let isAdmin = false;
 
+// Inicializa o app e configura botões
 async function initializeApp() {
   const { data } = await supabase.auth.getSession();
   const session = data.session;
@@ -15,27 +16,33 @@ async function initializeApp() {
       .select("is_admin")
       .eq("id", currentUser.id)
       .single();
-
     isAdmin = profile?.is_admin;
-    document.getElementById("admin-menu").classList.toggle("d-none", !isAdmin);
-    document.getElementById("btn-login").textContent = "Logout";
-    document.getElementById("btn-login").onclick = handleLogout;
+  }
+
+  updateAuthButtons();
+}
+
+// Atualiza texto/ações dos botões de login/register
+function updateAuthButtons() {
+  const btnLogin = document.getElementById("btn-login");
+  if (currentUser) {
+    btnLogin.textContent = "Logout";
+    btnLogin.onclick = handleLogout;
+    document.getElementById("admin-menu").classList.toggle("hidden", !isAdmin);
   } else {
-    document.getElementById("btn-login").textContent = "Login";
-    document.getElementById("btn-login").onclick = () => loadAuthPage(onLoginSuccess);
+    btnLogin.textContent = "Login";
+    btnLogin.onclick = () => loadAuthPage(onLoginSuccess);
+    document.getElementById("admin-menu").classList.add("hidden");
   }
 
   document.getElementById("btn-register").onclick = () => loadRegisterForm(onLoginSuccess);
 }
 
+// Login/logout callback
 function onLoginSuccess(user, admin) {
   currentUser = user;
   isAdmin = admin;
-
-  document.getElementById("admin-menu").classList.toggle("d-none", !isAdmin);
-  document.getElementById("btn-login").textContent = "Logout";
-  document.getElementById("btn-login").onclick = handleLogout;
-
+  updateAuthButtons();
   navigate("home");
 }
 
@@ -43,9 +50,7 @@ function handleLogout() {
   supabase.auth.signOut().then(() => {
     currentUser = null;
     isAdmin = false;
-    document.getElementById("admin-menu").classList.add("d-none");
-    document.getElementById("btn-login").textContent = "Login";
-    document.getElementById("btn-login").onclick = () => loadAuthPage(onLoginSuccess);
+    updateAuthButtons();
     navigate("home");
   });
 }
@@ -54,32 +59,41 @@ function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export function navigate(page) {
-  // Garante que o offcanvas fecha corretamente
+// Navegação com fechamento de menu
+export async function navigate(page) {
+  // Fecha offcanvas (Tailwind/Bootstrap)
   const offcanvasEl = document.getElementById("offcanvasMenu");
-  if (bootstrap && offcanvasEl) {
-    const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl) || new bootstrap.Offcanvas(offcanvasEl);
-    offcanvas.hide();
+  if (offcanvasEl.classList.contains("translate-x-0")) {
+    offcanvasEl.classList.remove("translate-x-0");
+    offcanvasEl.classList.add("-translate-x-full");
   }
 
-  import(`./${page}.js`)
-    .then((mod) => {
-      if (mod.default) {
-        mod.default();
-      } else if (typeof window[`load${capitalize(page)}`] === "function") {
-        window[`load${capitalize(page)}`]();
-      } else {
-        document.getElementById("main-content").innerHTML = `<p class="text-warning">Página "${page}" não encontrada.</p>`;
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      document.getElementById("main-content").innerHTML = `<p class="text-danger">Erro ao carregar "${page}".</p>`;
-    });
+  try {
+    const mod = await import(`./${page}.js`);
+    if (typeof mod.default === "function") {
+      mod.default();
+    } else if (typeof window[`load${capitalize(page)}`] === "function") {
+      window[`load${capitalize(page)}`]();
+    } else {
+      showError(`Página "${page}" não encontrada.`);
+    }
+  } catch (err) {
+    console.error(err);
+    showError(`Erro ao carregar "${page}".`);
+  }
 }
 
+// Mostra erro na UI
+function showError(msg) {
+  document.getElementById("main-content").innerHTML = `
+    <div class="p-6 bg-red-900 text-red-100 rounded-md">
+      <p>${msg}</p>
+      <button class="mt-4 px-4 py-2 bg-gray-800 rounded hover:bg-gray-700" onclick="navigate('home')">Voltar</button>
+    </div>`;
+}
+
+// Torna global para HTML onclick
 window.navigate = navigate;
 
-initializeApp().then(() => {
-  navigate("home");
-});
+// Inicia aplicação
+initializeApp().then(() => navigate("home"));
