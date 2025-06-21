@@ -19,16 +19,18 @@ function updateAuthButtons() {
   const btnLogin = document.getElementById("btn-login");
   const btnRegister = document.getElementById("btn-register");
   const adminMenu = document.getElementById("admin-menu");
-  
+
   if (currentUser) {
     btnLogin.textContent = "Logout";
     btnLogin.onclick = handleLogout;
-    adminMenu.classList.toggle("d-none", !isAdmin);
+    adminMenu.classList.remove("hidden");
+    if (!isAdmin) adminMenu.classList.add("hidden");
   } else {
     btnLogin.textContent = "Login";
     btnLogin.onclick = () => loadAuthPage(onLoginSuccess);
-    adminMenu.classList.add("d-none");
+    adminMenu.classList.add("hidden");
   }
+
   btnRegister.onclick = () => loadRegisterForm(onLoginSuccess);
 }
 
@@ -53,13 +55,14 @@ function capitalize(s) {
 }
 
 export async function navigate(page) {
-  // Fecha offcanvas
-  const offcanvasEl = document.getElementById("offcanvasMenu");
-  const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-  if (offcanvas) offcanvas.hide();
+  // Fecha menu lateral com Tailwind
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  sidebar.classList.add("-translate-x-full");
+  overlay.classList.add("hidden");
 
   const main = document.getElementById("main-content");
-  main.innerHTML = `<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>`;
+  main.innerHTML = `<div class="text-center py-10"><i class="fas fa-spinner fa-spin fa-2x text-white"></i></div>`;
 
   try {
     const mod = await import(`./${page}.js`);
@@ -70,7 +73,7 @@ export async function navigate(page) {
     }
   } catch (err) {
     console.error(err);
-    main.innerHTML = `<div class="alert alert-danger">Erro ao carregar "${page}".</div>`;
+    main.innerHTML = `<div class="text-red-500 text-center mt-10">Erro ao carregar "${page}"</div>`;
   }
 }
 
