@@ -19,20 +19,27 @@ export default function () {
 
 function getLogoSVG() {
   return `
-    <svg width="100%" height="100%" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="gradPurple" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#6A1B9A"/>
-          <stop offset="100%" stop-color="#AB47BC"/>
-        </linearGradient>
-      </defs>
-      <path d="M10 50 L30 15 C35 10,45 10,50 15 L70 50 Z" fill="url(#gradPurple)" />
-      <text x="80" y="38" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="url(#gradPurple)">
-        CoreLance
-      </text>
-    </svg>
-  `;
-}
+  <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purpleGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a066ff"/>
+      <stop offset="50%" stop-color="#8a00ff"/>
+      <stop offset="100%" stop-color="#4e00a8"/>
+    </linearGradient>
+  </defs>
+  <path
+    d="M65 30C90 25 125 30 145 55C160 75 165 105 145 125C135 135 125 130 115 115C110 135 100 155 80 160C60 165 40 150 35 130C25 100 35 45 65 30Z"
+    fill="url(#purpleGradient)"
+  />
+  <path
+    d="M125 65C122 58 132 50 138 53C144 57 135 66 125 65Z"
+    fill="white"
+  />
+  <path
+    d="M80 160C90 140 105 105 120 85C125 80 130 78 135 78C120 100 105 135 100 150C95 160 90 163 80 160Z"
+    fill="white"
+  />
+</svg>
 
 function getServiceButtons() {
   return `
