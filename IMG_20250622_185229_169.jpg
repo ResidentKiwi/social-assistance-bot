@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="236.000000pt" height="518.000000pt" viewBox="46.11 165 151.39 192" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="1218.052" y1="1610" x2="1218.052" y2="3530" id="gradient-2">
+      <stop offset="0" style="stop-color: rgb(0% 0% 0%)"/>
+      <stop offset="1" style="stop-color: rgb(0% 0% 0%)"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="1519.784" y1="1680" x2="1519.784" y2="2668.282" id="gradient-3">
+      <stop offset="0" style="stop-color: rgb(0% 0% 0%)"/>
+      <stop offset="1" style="stop-color: rgb(0% 0% 0%)"/>
+    </linearGradient>
+    <linearGradient id="gradient-4">
+      <stop offset="0" style="stop-color: rgb(230, 0, 255);"/>
+      <stop offset="0.906" style="stop-color: rgb(125, 29, 185);"/>
+    </linearGradient>
+    <linearGradient id="gradient-4-0" href="#gradient-4" gradientUnits="userSpaceOnUse" x1="1218.052" y1="1610" x2="1218.052" y2="3530"/>
+    <linearGradient id="gradient-4-1" href="#gradient-4" gradientUnits="userSpaceOnUse" x1="1519.784" y1="1680" x2="1519.784" y2="2668.282"/>
+  </defs>
+  <g transform="translate(0.000000,518.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+    <path d="M716 3488 c20 -56 39 -86 86 -130 l40 -37 -52 -54 c-79 -84 -128 -153 -180 -257 -90 -180 -137 -360 -147 -565 -12 -248 27 -318 291 -529 128 -102 418 -306 435 -306 4 0 15 6 24 13 15 11 13 20 -19 106 -48 128 -64 207 -64 326 0 153 33 272 114 409 57 95 193 222 288 269 139 67 237 71 361 15 37 -17 71 -28 75 -24 4 4 7 44 7 89 0 66 -5 91 -24 131 -28 57 -80 108 -152 151 -46 27 -53 36 -64 78 -7 26 -25 64 -42 85 -59 74 -232 171 -370 207 -54 14 -515 65 -589 65 l-33 0 15 -42z m762 -346 c61 -23 144 -80 137 -93 -4 -5 -25 -19 -47 -30 -76 -39 -154 -14 -184 58 -9 21 -29 40 -54 53 -22 11 -40 23 -40 25 0 14 145 3 188 -13z" style="paint-order: fill; stroke: url(&quot;#gradient-2&quot;); fill: url(&quot;#gradient-4-0&quot;);"/>
+    <path d="M1513 2631 c-127 -82 -212 -193 -266 -348 -39 -112 -49 -285 -23 -398 17 -72 64 -205 73 -205 7 0 89 57 161 112 180 137 372 313 372 341 0 8 -10 22 -21 33 -87 78 -209 346 -209 460 0 55 -9 56 -87 5z" style="paint-order: fill; stroke: url(&quot;#gradient-3&quot;); fill: url(&quot;#gradient-4-1&quot;);"/>
+  </g>
+  <g transform="matrix(0.521535, 0, 0, 0.521535, -15.16269, 274.38916)"/>
+</svg>
