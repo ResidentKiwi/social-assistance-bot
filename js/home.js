@@ -1,6 +1,6 @@
 function getLogoImage() {
   return `
-    <img src="assets/corelance-logo.jpg" alt="Logo CoreLance" class="w-48 h-auto mx-auto" />
+    <img src="./assets/corelance-logo.jpg" alt="Logo CoreLance" class="w-48 h-auto mx-auto" />
   `;
 }
 
