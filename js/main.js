@@ -1,7 +1,5 @@
 // js/main.js
 import { loadAuthPage, loadRegisterForm } from './auth.js';
-import jwtDecode from 'jwt-decode';
-
 let currentUser = null;
 let isAdmin = false;
 
