@@ -1,7 +1,9 @@
+// js/main.js
 import { loadAuthPage, loadRegisterForm } from './auth.js';
 import jwtDecode from 'jwt-decode';
 
-let currentUser = null, isAdmin = false;
+let currentUser = null;
+let isAdmin = false;
 
 async function initializeApp() {
   const token = localStorage.getItem('token');
@@ -10,7 +12,8 @@ async function initializeApp() {
       const payload = jwtDecode(token);
       currentUser = payload.sub;
       isAdmin = Boolean(payload.is_admin);
-    } catch {
+    } catch (err) {
+      console.warn("Token inválido, removendo...");
       localStorage.removeItem('token');
     }
   }
@@ -25,13 +28,17 @@ function updateAuthButtons() {
   if (currentUser) {
     btnLogin.textContent = 'Logout';
     btnLogin.onclick = handleLogout;
-    adminMenu.classList.toggle('hidden', !isAdmin);
+    if (adminMenu) adminMenu.classList.toggle('hidden', !isAdmin);
+    if (btnRegister) btnRegister.classList.add('hidden');
   } else {
     btnLogin.textContent = 'Login';
     btnLogin.onclick = () => loadAuthPage(onLoginSuccess);
-    adminMenu.classList.add('hidden');
+    if (adminMenu) adminMenu.classList.add('hidden');
+    if (btnRegister) {
+      btnRegister.classList.remove('hidden');
+      btnRegister.onclick = () => loadRegisterForm(onLoginSuccess);
+    }
   }
-  btnRegister.onclick = () => loadRegisterForm(onLoginSuccess);
 }
 
 function onLoginSuccess(userId, adminFlag) {
@@ -50,19 +57,28 @@ function handleLogout() {
 }
 
 export async function navigate(page) {
-  document.getElementById('sidebar').classList.add('-translate-x-full');
-  document.getElementById('overlay').classList.add('hidden');
+  document.getElementById('sidebar')?.classList.add('-translate-x-full');
+  document.getElementById('overlay')?.classList.add('hidden');
+
   const main = document.getElementById('main-content');
-  main.innerHTML = `<div class="text-center py-10"><i class="fas fa-spinner fa-spin fa-2x text-white"></i></div>`;
+  if (main) {
+    main.innerHTML = `<div class="text-center py-10"><i class="fas fa-spinner fa-spin fa-2x text-white"></i></div>`;
+  }
+
   try {
     const mod = await import(`./${page}.js`);
     if (mod.default) mod.default();
-    else throw new Error('Modulo sem default');
+    else throw new Error('Módulo não possui export default');
   } catch (err) {
     console.error(err);
-    main.innerHTML = `<div class="text-red-500 text-center mt-10">Erro ao carregar "${page}"</div>`;
+    if (main) {
+      main.innerHTML = `<div class="text-red-500 text-center mt-10">Erro ao carregar "${page}"</div>`;
+    }
   }
 }
 
+// Expor função global para navegação
 window.navigate = navigate;
+
+// Inicializar aplicação
 initializeApp().then(() => navigate('home'));
