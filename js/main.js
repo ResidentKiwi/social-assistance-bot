@@ -9,7 +9,7 @@ async function initializeApp() {
   const token = localStorage.getItem('token');
   if (token) {
     try {
-      const payload = jwtDecode(token);
+      const payload = jwt_decode(token);
       currentUser = payload.sub;
       isAdmin = Boolean(payload.is_admin);
     } catch (err) {
