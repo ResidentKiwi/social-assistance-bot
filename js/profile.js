@@ -1,33 +1,25 @@
-// js/profile.js
-import { supabase } from "./supabaseClient.js";
 import { navigate } from "./main.js";
 
 export default async function () {
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
-  if (!user) {
+  const token = localStorage.getItem("access_token");
+  if (!token) {
     document.getElementById("main-content").innerHTML = `
       <p class="text-yellow-400 text-center mt-10">Você precisa estar logado para acessar o perfil.</p>
     `;
     return;
   }
 
-  const { data: profile, error } = await supabase
-    .from("profiles")
-    .select("name, description, avatar_url")
-    .eq("id", user.id)
-    .single();
-
-  if (error) {
-    console.error(error);
-    document.getElementById("main-content").innerHTML = `
-      <p class="text-red-500 text-center mt-10">Erro ao carregar perfil.</p>
-    `;
+  const res = await fetch("https://social-assistance-backend.onrender.com/profile/me", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) {
+    document.getElementById("main-content").innerHTML = `<p class="text-red-500 text-center mt-10">Erro ao carregar perfil.</p>`;
     return;
   }
 
-  const avatarHtml = profile.avatar_url && profile.avatar_url.startsWith("http")
-    ? `<img src="${profile.avatar_url}" alt="Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-violet-500 shadow-md">`
+  const profile = await res.json();
+  const avatarHtml = profile.has_avatar
+    ? `<img src="https://social-assistance-backend.onrender.com/profile/avatar" alt="Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-violet-500 shadow-md">`
     : `<div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center text-xl text-gray-200">?</div>`;
 
   document.getElementById("main-content").innerHTML = `
@@ -70,33 +62,21 @@ export default async function () {
     const name = document.getElementById("name").value.trim();
     const desc = document.getElementById("desc").value.trim();
     const file = document.getElementById("avatar").files[0];
-    let avatar_url = profile.avatar_url;
 
-    if (file) {
-      const ext = file.name.split(".").pop();
-      const path = `${user.id}/avatar.${ext}`;
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", desc);
+    if (file) formData.append("avatar", file);
 
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true });
+    const res = await fetch("https://social-assistance-backend.onrender.com/profile/update", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    });
 
-      if (uploadError) {
-        console.error(uploadError);
-        alert("Erro ao enviar imagem. Verifique o bucket 'avatars' e as permissões.");
-        return;
-      }
-
-      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      avatar_url = data?.publicUrl;
-    }
-
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ name, description: desc, avatar_url })
-      .eq("id", user.id);
-
-    if (updateError) {
-      console.error(updateError);
+    if (!res.ok) {
       alert("Erro ao atualizar perfil.");
     } else {
       alert("Perfil atualizado com sucesso!");
