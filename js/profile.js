@@ -1,5 +1,6 @@
 // js/profile.js
 import { supabase } from "./supabaseClient.js";
+import { navigate } from "./main.js";
 
 export default async function () {
   const { data: { session } } = await supabase.auth.getSession();
@@ -25,7 +26,7 @@ export default async function () {
     return;
   }
 
-  const avatarHtml = profile.avatar_url
+  const avatarHtml = profile.avatar_url && profile.avatar_url.startsWith("http")
     ? `<img src="${profile.avatar_url}" alt="Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-violet-500 shadow-md">`
     : `<div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center text-xl text-gray-200">?</div>`;
 
@@ -85,11 +86,8 @@ export default async function () {
         return;
       }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(path);
-
-      avatar_url = publicUrl;
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      avatar_url = data?.publicUrl;
     }
 
     const { error: updateError } = await supabase
@@ -102,7 +100,7 @@ export default async function () {
       alert("Erro ao atualizar perfil.");
     } else {
       alert("Perfil atualizado com sucesso!");
-      navigate("profile"); // Recarrega dinamicamente via navigate
+      navigate("profile");
     }
   };
-           }
+}
