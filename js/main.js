@@ -1,5 +1,7 @@
-// js/main.js
+// src/main.js
 import { loadAuthPage, loadRegisterForm } from './auth.js';
+import jwt_decode from 'jwt-decode'; // ✅ Correção: uso correto do módulo
+
 let currentUser = null;
 let isAdmin = false;
 
@@ -7,7 +9,7 @@ async function initializeApp() {
   const token = localStorage.getItem('token');
   if (token) {
     try {
-      const payload = jwt_decode(token);
+      const payload = jwt_decode(token); // ✅ Agora funciona
       currentUser = payload.sub;
       isAdmin = Boolean(payload.is_admin);
     } catch (err) {
@@ -75,8 +77,8 @@ export async function navigate(page) {
   }
 }
 
-// Expor função global para navegação
+// ✅ Correto com Vite: Vite respeita variáveis globais definidas assim
 window.navigate = navigate;
 
-// Inicializar aplicação
+// Inicializar app
 initializeApp().then(() => navigate('home'));
