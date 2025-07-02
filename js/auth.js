@@ -1,4 +1,6 @@
+// src/auth.js
 import jwtDecode from 'jwt-decode';
+import { loadAuthPage } from './auth.js'; // caso loadAuthPage seja reusado internamente
 
 function togglePasswordVisibility(btn, inputs) {
   inputs.forEach(input => {
@@ -21,7 +23,7 @@ function validatePassword(pwd) {
 }
 
 export function loadAuthPage(onSuccess) {
-  document.getElementById('main-content').innerHTML = `...`; // mesmo HTML
+  document.getElementById('main-content').innerHTML = `...`; // seu HTML normal
 
   const pwdInput = document.getElementById('loginPassword');
   document.getElementById('toggleLoginPwd')
@@ -52,7 +54,7 @@ export function loadAuthPage(onSuccess) {
 }
 
 export function loadRegisterForm(onSuccess) {
-  document.getElementById('main-content').innerHTML = `...`; // mesmo HTML
+  document.getElementById('main-content').innerHTML = `...`; // seu HTML normal
 
   const pwd = document.getElementById('signupPassword');
   const confirmPwd = document.getElementById('signupConfirm');
@@ -98,7 +100,7 @@ export function loadRegisterForm(onSuccess) {
     document.getElementById('verifyForm').onsubmit = async evt => {
       evt.preventDefault();
       const code = document.getElementById('code').value.trim();
-      const res2 = await fetch(`/auth/verify-code`, {
+      const res2 = await fetch('/auth/verify-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, email: form.get('email') })
