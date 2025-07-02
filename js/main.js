@@ -1,4 +1,5 @@
 // src/main.js
+import '../style.css'; // Caminho pode variar se estiver em /src ou /js
 import { loadAuthPage, loadRegisterForm } from './auth.js';
 import jwt_decode from 'jwt-decode'; // ✅ Correção: uso correto do módulo
 
