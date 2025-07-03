@@ -1,16 +1,24 @@
 // src/main.js
-import '../style.css'; // Caminho pode variar se estiver em /src ou /js
 import { loadAuthPage, loadRegisterForm } from './auth.js';
-import jwt_decode from 'jwt-decode'; // ✅ Correção: uso correto do módulo
+import jwtDecode from 'jwt-decode';
 
 let currentUser = null;
 let isAdmin = false;
+
+const routes = {
+  home: () => import('./home.js'),
+  profile: () => import('./profile.js'),
+  'cv-generator': () => import('./cv-generator.js'),
+  'benefit-checker': () => import('./benefit-checker.js'),
+  'vestibular-guide': () => import('./vestibular-guide.js'),
+  admin: () => import('./admin.js')
+};
 
 async function initializeApp() {
   const token = localStorage.getItem('token');
   if (token) {
     try {
-      const payload = jwt_decode(token); // ✅ Agora funciona
+      const payload = jwtDecode(token);
       currentUser = payload.sub;
       isAdmin = Boolean(payload.is_admin);
     } catch (err) {
@@ -67,7 +75,8 @@ export async function navigate(page) {
   }
 
   try {
-    const mod = await import(`./${page}.js`);
+    if (!(page in routes)) throw new Error("Página inválida");
+    const mod = await routes[page]();
     if (mod.default) mod.default();
     else throw new Error('Módulo não possui export default');
   } catch (err) {
@@ -78,8 +87,6 @@ export async function navigate(page) {
   }
 }
 
-// ✅ Correto com Vite: Vite respeita variáveis globais definidas assim
 window.navigate = navigate;
 
-// Inicializar app
 initializeApp().then(() => navigate('home'));
